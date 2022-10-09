@@ -9,6 +9,10 @@ packages = [{include = "src"}]
 
 [tool.poetry.dependencies]
 python = "^3.8"
+transformers = "^4.22.2"
+simpletransformers = "^0.63.9"
+torch = "^1.12.1"
+Flask = "^2.2.2"
 
 
 [tool.poetry.group.dev.dependencies]
@@ -17,6 +21,7 @@ black = "^22.8.0"
 flake8 = "^5.0.4"
 isort = "^5.10.1"
 pre-commit = "^2.20.0"
+jupyter = "^1.0.0"
 
 [build-system]
 requires = ["poetry-core"]

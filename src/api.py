@@ -3,12 +3,14 @@ import logging
 import socket
 import torch
 from flask import Flask, jsonify, request
+from simpletransformers.seq2seq import Seq2SeqModel,Seq2SeqArgs
+from transformers import AutoModel
 
 
 HOST_NAME = os.environ.get('APP_DNS', 'localhost')
 APP_NAME = os.environ.get('APP_NAME', 'flask')
 IP = os.environ.get('PYTHON_IP', '127.0.0.1')
-PORT = int(os.environ.get('PYTHON_PORT', 8080))
+PORT = int(os.environ.get('PYTHON_PORT', 8088))
 HOME_DIR = os.environ.get('HOMEDIR', os.getcwd())
 
 log = logging.getLogger(__name__)
@@ -27,10 +29,32 @@ def hello():
     })
 
 
+def load_model():
+    path = "./model/seq2seqmodel"
+    model_loaded = AutoModel.from_pretrained(path, local_files_only=True)
+    return model_loaded
+
+
+def initialize_model(model_loaded):
+    model_args = Seq2SeqArgs()
+    model = Seq2SeqModel(
+        encoder_decoder_type="bart",
+        encoder_decoder_name="facebook/bart-large",
+        args=model_args,
+        model=model_loaded,
+        use_cuda=False,
+    )
+    return model
+
+
 def get_model():
-    # This will change once the model is hosted on hugginsface.
-    path = "seq2seqmodel"
-    model = torch.load(path)
+    global get_model
+    model_loaded = load_model()
+    model = initialize_model(model_loaded)
+
+    def inner():
+        return model
+    get_model = inner
     return model
 
 

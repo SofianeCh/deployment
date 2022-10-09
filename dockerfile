@@ -3,7 +3,7 @@ FROM python:3.9
 WORKDIR /app
 
 COPY requirements.txt requirements.txt
-COPY seq2seqmodel seq2seqmodel
+COPY model/seq2seqmodel model/seq2seqmodel
 
 
 ENV PYTHONUNBUFFERED=1
